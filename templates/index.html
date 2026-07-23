@@ -1,0 +1,1129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>DocuMind AI</title>
+
+    <link rel="stylesheet"
+          href="{% static 'css/styles.css' %}">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<!--=========================
+Animated Background
+==========================-->
+
+<div class="background">
+
+    <span class="blob blob1"></span>
+    <span class="blob blob2"></span>
+    <span class="blob blob3"></span>
+
+</div>
+
+<div class="particles" id="particles"></div>
+
+<!--====================================================
+                AUTH OVERLAY (login / register)
+=====================================================-->
+
+<div id="authOverlay" class="auth-overlay">
+
+    <div class="auth-card">
+
+        <div class="auth-brand">
+            <div class="logo-circle">AI</div>
+            <div>
+                <h2>DocuMind</h2>
+                <span>Smart Assistant</span>
+            </div>
+        </div>
+
+        <p class="auth-tag">Answers, traced back to the page they came from.</p>
+
+        <div class="auth-tabs">
+            <button type="button" class="auth-tab active" data-tab="login">Log in</button>
+            <button type="button" class="auth-tab" data-tab="register">Create account</button>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+            <label>Username or email
+                <input type="text" name="identifier" autocomplete="username" required>
+            </label>
+            <label>Password
+                <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+            <p class="auth-error" id="loginError"></p>
+            <button type="submit" class="primary-btn btn-full">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Log in
+            </button>
+        </form>
+
+        <form id="registerForm" class="auth-form hidden">
+            <label>Username
+                <input type="text" name="username" minlength="3" required>
+            </label>
+            <label>Email
+                <input type="email" name="email" required>
+            </label>
+            <label>Password
+                <input type="password" name="password" minlength="8" required>
+            </label>
+            <label>Role
+                <select name="role">
+                    <option value="standard">Standard user</option>
+                    <option value="viewer">Viewer</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </label>
+            <p class="auth-error" id="registerError"></p>
+            <button type="submit" class="primary-btn btn-full">
+                <i class="fa-solid fa-user-plus"></i>
+                Create account
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+<!--=========================
+Main Layout
+==========================-->
+
+<div class="layout hidden" id="appRoot">
+
+<!--=========================
+Sidebar
+==========================-->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-circle">
+            AI
+        </div>
+
+        <div>
+
+            <h2>DocuMind</h2>
+            <span>Smart Assistant</span>
+
+        </div>
+
+    </div>
+
+    <nav>
+
+        <a href="#top" class="active" data-view="dashboard">
+
+            <i class="fa-solid fa-house"></i>
+
+            Dashboard
+
+        </a>
+
+        <a href="#library" data-view="library">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            Documents
+
+        </a>
+
+        <a href="#upload" data-view="upload">
+
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+            Upload
+
+        </a>
+
+        <a href="#chat" data-view="chat">
+
+            <i class="fa-solid fa-comments"></i>
+
+            AI Chat
+
+        </a>
+
+        <a href="#history" data-view="history">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            History
+
+        </a>
+
+        <a href="#settings" data-view="settings">
+
+            <i class="fa-solid fa-gear"></i>
+
+            Settings
+
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <button id="logoutBtn">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            Logout
+
+        </button>
+
+    </div>
+
+</aside>
+
+<!--=========================
+Content Area
+==========================-->
+
+<main class="main-content" id="mainContent">
+
+<!--=========================
+Top Navbar
+==========================-->
+
+<header class="topbar" id="top">
+
+<div class="search">
+
+    <i class="fa-solid fa-magnifying-glass"></i>
+
+    <input type="text"
+           id="searchInput"
+           placeholder="Search your documents...">
+
+</div>
+
+<div class="top-actions">
+
+    <button class="icon-btn" id="notifBtn" type="button" title="Activity">
+
+        <i class="fa-regular fa-bell"></i>
+
+    </button>
+
+    <button class="icon-btn" id="darkModeBtn" type="button" title="Toggle theme">
+
+        <i class="fa-regular fa-moon"></i>
+
+    </button>
+
+    <div class="profile">
+
+        <img src="https://i.pravatar.cc/100"
+             alt="User">
+
+        <div>
+
+            <h4 id="username">
+
+                Welcome
+
+            </h4>
+
+            <span id="userRole">AI Explorer</span>
+
+        </div>
+
+    </div>
+
+</div>
+
+</header>
+
+<!--=========================
+Hero
+==========================-->
+
+<section class="hero">
+
+<div>
+
+    <h1>
+
+        Unlock Knowledge<br>
+
+        with <span>Artificial Intelligence</span>
+
+    </h1>
+
+    <p>
+
+        Upload PDFs and Markdown notes, then ask intelligent
+        questions with verified answers and citations.
+
+    </p>
+
+    <div class="hero-buttons">
+
+        <button class="primary-btn" id="heroUploadBtn" type="button">
+
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+            Upload Documents
+
+        </button>
+
+        <button class="secondary-btn" id="heroAskBtn" type="button">
+
+            <i class="fa-solid fa-robot"></i>
+
+            Ask AI
+
+        </button>
+
+    </div>
+
+</div>
+
+<div class="hero-image">
+
+    <img src="/static/images/robot.png"
+         alt="AI"
+         onerror="this.style.display='none'">
+
+</div>
+
+</section>
+
+<!--=========================
+Dashboard Cards
+==========================-->
+
+<section class="dashboard">
+
+<div class="card">
+
+    <div>
+
+        <h3 id="totalDocs">
+
+            0
+
+        </h3>
+
+        <p>Total Documents</p>
+
+    </div>
+
+    <i class="fa-solid fa-file"></i>
+
+</div>
+
+<div class="card">
+
+    <div>
+
+        <h3 id="totalChats">
+
+            0
+
+        </h3>
+
+        <p>AI Conversations</p>
+
+    </div>
+
+    <i class="fa-solid fa-comments"></i>
+
+</div>
+
+<div class="card">
+
+    <div>
+
+        <h3 id="storageUsed">
+
+            0 MB
+
+        </h3>
+
+        <p>Storage Used</p>
+
+    </div>
+
+    <i class="fa-solid fa-database"></i>
+
+</div>
+
+<div class="card">
+
+    <div>
+
+        <h3 id="todayUploads">
+
+            0
+
+        </h3>
+
+        <p>Today's Uploads</p>
+
+    </div>
+
+    <i class="fa-solid fa-cloud-arrow-up"></i>
+
+</div>
+
+</section>
+<!--======================================
+UPLOAD SECTION
+=======================================-->
+
+<section id="upload" class="upload-section">
+
+    <div class="section-header">
+
+        <div>
+            <h2>Upload Documents</h2>
+            <p>Drag & Drop files to begin intelligent analysis.</p>
+        </div>
+
+        <button class="glass-btn" id="headerBrowseBtn" type="button">
+
+            <i class="fa-solid fa-folder-plus"></i>
+
+            Browse Files
+
+        </button>
+
+    </div>
+
+    <div id="dropZone" class="drop-zone">
+
+        <div class="upload-icon">
+
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+        </div>
+
+        <h3>Drag & Drop Files Here</h3>
+
+        <p>
+
+            Supports PDF and Markdown (.md) — up to 25MB per file
+
+        </p>
+
+        <input
+                id="fileInput"
+                type="file"
+                accept=".pdf,.md"
+                hidden
+                multiple>
+
+        <button
+                id="chooseFileBtn"
+                class="primary-btn"
+                type="button">
+
+            Choose Files
+
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!--======================================
+UPLOAD PROGRESS
+=======================================-->
+
+<section class="progress-section hidden" id="progressSection">
+
+    <div class="progress-card">
+
+        <div class="progress-header">
+
+            <span id="progressLabel">Upload Progress</span>
+
+            <span id="progressValue">
+
+                0%
+
+            </span>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div
+                    id="progressFill"
+                    class="progress-fill">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+<!--======================================
+RECENT DOCUMENTS
+=======================================-->
+
+<section id="library" class="documents-section">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+
+                Recent Documents
+
+            </h2>
+
+            <p>
+
+                Access your latest uploaded files.
+
+            </p>
+
+        </div>
+
+        <button class="glass-btn" id="viewAllBtn" type="button">
+
+            View All
+
+        </button>
+
+    </div>
+
+<div id="documentsEmpty" class="documents-empty hidden">
+
+    <i class="fa-regular fa-folder-open"></i>
+    <p>Nothing indexed yet — upload a PDF or Markdown file to get started.</p>
+
+</div>
+
+<div
+        id="documentsGrid"
+        class="documents-grid">
+
+</div>
+
+</section>
+
+
+
+
+
+
+<!--======================================
+RIGHT SIDE PANEL
+=======================================-->
+
+<section class="right-panel">
+
+<div class="quote-card">
+
+<div class="quote-icon">
+
+<i class="fa-solid fa-lightbulb"></i>
+
+</div>
+
+<p id="dailyQuote">
+
+"Knowledge grows when shared."
+
+</p>
+
+<span>
+
+— DocuMind AI
+
+</span>
+
+</div>
+
+
+
+
+
+<div class="activity-card">
+
+<h3>
+
+Recent Activity
+
+</h3>
+
+<ul id="activityList">
+
+<li class="activity-empty">No recent activity yet.</li>
+
+</ul>
+
+</div>
+
+
+
+
+
+<div class="storage-card">
+
+<h3>
+
+Storage
+
+</h3>
+
+<div class="storage-circle" id="storageCircle">
+
+0%
+
+</div>
+
+<p>
+
+Used
+
+</p>
+
+</div>
+
+</section>
+
+
+
+
+
+
+<!--======================================
+FLOATING AI BUTTON
+=======================================-->
+
+<button
+        id="aiAssistant"
+        class="floating-ai"
+        type="button">
+
+<i class="fa-solid fa-robot"></i>
+
+</button>
+
+
+
+
+
+<!--======================================
+LOADING OVERLAY
+=======================================-->
+
+<div
+        id="loadingOverlay"
+        class="loading-overlay hidden">
+
+<div class="loader">
+
+<div class="ring"></div>
+
+<div class="ring"></div>
+
+<div class="ring"></div>
+
+<h2 id="loadingTitle">
+
+Analyzing Documents...
+
+</h2>
+
+<p>
+
+Please wait while AI processes your files.
+
+</p>
+
+</div>
+
+</div>
+<!--====================================================
+                AI CHAT SECTION
+=====================================================-->
+
+<section id="chat" class="chat-section">
+
+    <!-- Left Chat Panel -->
+    <div class="chat-container">
+
+        <!-- Chat Header -->
+        <div class="chat-header">
+
+            <div class="chat-title">
+
+                <div class="ai-avatar">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>DocuMind AI Assistant</h2>
+                    <span id="chatScopeLabel">Powered by Groq AI • Verified Answers</span>
+
+                </div>
+
+            </div>
+
+            <div class="chat-actions">
+
+                <button id="clearChatBtn" class="glass-btn" type="button">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Clear Chat
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Suggested Questions -->
+
+        <div class="suggested-prompts">
+
+            <button class="prompt-btn" type="button">
+
+                Summarize this document
+
+            </button>
+
+            <button class="prompt-btn" type="button">
+
+                Key points
+
+            </button>
+
+            <button class="prompt-btn" type="button">
+
+                Explain in simple language
+
+            </button>
+
+            <button class="prompt-btn" type="button">
+
+                Important dates
+
+            </button>
+
+            <button class="prompt-btn" type="button">
+
+                Important formulas
+
+            </button>
+
+        </div>
+
+        <!-- Chat Messages -->
+
+        <div id="chatMessages" class="chat-messages">
+
+            <!-- AI Welcome -->
+
+            <div class="message ai">
+
+                <div class="message-avatar">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                </div>
+
+                <div class="message-content">
+
+                    <h4>DocuMind AI</h4>
+
+                    <p>
+
+                        👋 Hello!
+
+                        Upload a document and ask me anything.
+
+                        I'll answer using only information found inside your files.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Typing Animation -->
+
+        <div id="typingIndicator" class="typing-indicator hidden">
+
+            <div class="message-avatar">
+
+                <i class="fa-solid fa-robot"></i>
+
+            </div>
+
+            <div class="typing">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+        <!-- Chat Input -->
+
+        <p class="chat-input-hint hidden" id="chatInputHint">Upload a document to start asking questions.</p>
+
+        <div class="chat-input">
+
+            <textarea
+                    id="questionInput"
+                    rows="1"
+                    disabled
+                    placeholder="Ask anything about your documents..."></textarea>
+
+            <button id="sendQuestionBtn" type="button" disabled>
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+            <button id="stopQuestionBtn" type="button" class="hidden">
+
+                <i class="fa-solid fa-stop"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!--==================================
+            Source Panel
+    ===================================-->
+
+    <aside class="sources-panel">
+
+        <div class="panel-header">
+
+            <h3>
+
+                Sources
+
+            </h3>
+
+            <span>
+
+                Verified Citations
+
+            </span>
+
+        </div>
+
+        <div id="sourcesContainer">
+
+            <div class="source-empty" id="sourcesEmpty">
+
+                Citation snippets will appear here once you ask a question.
+
+            </div>
+
+        </div>
+
+    </aside>
+
+</section>
+
+
+
+
+
+<!--====================================================
+                DOCUMENT PREVIEW MODAL
+=====================================================-->
+
+<div id="previewModal" class="modal">
+
+    <div class="modal-content large">
+
+        <div class="modal-header">
+
+            <h2 id="previewTitle">
+
+                Document Preview
+
+            </h2>
+
+            <button class="closeModal" type="button">
+
+                &times;
+
+            </button>
+
+        </div>
+
+        <iframe
+
+                id="previewFrame"
+
+                src=""
+
+                sandbox="allow-same-origin"
+
+                frameborder="0">
+
+        </iframe>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!--====================================================
+                RENAME MODAL
+=====================================================-->
+
+<div id="renameModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>
+
+                Rename Document
+
+            </h2>
+
+            <button class="closeModal" type="button">
+
+                &times;
+
+            </button>
+
+        </div>
+
+        <input
+
+                id="renameInput"
+
+                type="text"
+
+                placeholder="Document name">
+
+        <button id="renameSaveBtn"
+
+                class="primary-btn"
+                type="button">
+
+            Save Changes
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!--====================================================
+                SHARE MODAL
+=====================================================-->
+
+<div id="shareModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>
+
+                Share Document
+
+            </h2>
+
+            <button class="closeModal" type="button">
+
+                &times;
+
+            </button>
+
+        </div>
+
+        <p class="modal-subtext">Grant another DocuMind user read-only access.</p>
+
+        <input
+
+                id="shareInput"
+
+                type="text"
+
+                placeholder="Username">
+
+        <button id="shareSaveBtn"
+
+                class="primary-btn"
+                type="button">
+
+            Share
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!--====================================================
+                DELETE MODAL
+=====================================================-->
+
+<div id="deleteModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2>
+
+                Delete Document
+
+            </h2>
+
+        </div>
+
+        <p>
+
+            This action cannot be undone.
+
+        </p>
+
+        <div class="modal-buttons">
+
+            <button
+
+                    id="cancelDelete"
+
+                    class="glass-btn"
+                    type="button">
+
+                Cancel
+
+            </button>
+
+            <button
+
+                    id="confirmDelete"
+
+                    class="danger-btn"
+                    type="button">
+
+                Delete
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<!--====================================================
+            TOAST NOTIFICATIONS
+=====================================================-->
+
+<div id="toastContainer">
+
+</div>
+
+
+
+
+
+
+<!--====================================================
+                FOOTER
+=====================================================-->
+
+<footer class="footer">
+
+    <div>
+
+        © 2026 DocuMind AI
+
+    </div>
+
+    <div>
+
+        Built with ❤️ using HTML • CSS • JavaScript • Django
+
+    </div>
+
+</footer>
+
+</main>
+
+</div>
+
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+
+</body>
+</html>

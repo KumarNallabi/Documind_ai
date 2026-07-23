@@ -1,0 +1,1 @@
+web: gunicorn documind.wsgi:application
